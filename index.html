@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="سیستم مدیریت یکپارچه املاک امپراتوری - نسخه ۱.۰.۰">
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" as="style">
+    <link rel="preload" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" as="style">
+    <link rel="preload" href="./scripts/app.js" as="script">
+
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="./styles/main.css">
+
+    <!-- Security -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+    <title>امپراتوری املاک | سامانه ثبتی پیشرفته</title>
+</head>
+
+<body>
+    <!-- Navigation System -->
+    <nav class="nav" aria-label="Primary navigation">
+        <button class="nav__back-btn" data-action="prev-page" aria-hidden="true" hidden>
+            ← بازگشت
+            <span class="sr-only">Navigate to previous page</span>
+        </button>
+    </nav>
+
+    <!-- Loading Indicator -->
+    <div class="loading-overlay" role="status" aria-live="polite" hidden>
+        <div class="loading-spinner" aria-hidden="true"></div>
+        <span class="loading-text">در حال بارگذاری سیستم...</span>
+    </div>
+
+    <!-- Main Application -->
+    <main id="app-root" class="app-container">
+        <!-- Authentication View -->
+        <section class="view view--auth" data-view="auth" aria-labelledby="authHeading">
+            <h1 id="authHeading" class="view__title">
+                <span aria-hidden="true">🔐</span>
+                احراز هویت
+            </h1>
+            
+            <form id="authForm" class="auth-form" novalidate>
+                <div class="form-group">
+                    <label for="phoneInput" class="form-label">شماره موبایل</label>
+                    <input 
+                        type="tel" 
+                        id="phoneInput"
+                        class="form-control"
+                        inputmode="numeric"
+                        pattern="09\d{9}"
+                        placeholder="۰۹۱۲۳۴۵۶۷۸۹"
+                        aria-describedby="phoneError"
+                        required
+                    >
+                    <div id="phoneError" class="form-error" role="alert"></div>
+                </div>
+
+                <div class="g-recaptcha" 
+                    data-sitekey="YOUR_ACTUAL_SITE_KEY"
+                    data-callback="ImperialEstate.onCaptchaSuccess"
+                    data-error-callback="ImperialEstate.onCaptchaError"
+                    aria-describedby="captchaHelp"
+                ></div>
+                <div id="captchaHelp" class="sr-only">تأیید امنیتی ضروری است</div>
+
+                <button type="submit" class="btn btn--primary">
+                    ادامه
+                    <span aria-hidden="true">→</span>
+                </button>
+            </form>
+        </section>
+
+        <!-- Subscription View -->
+        <section class="view view--subscription" data-view="subscription" hidden 
+                 aria-labelledby="subscriptionHeading">
+            <h1 id="subscriptionHeading" class="view__title">
+                <span aria-hidden="true">💎</span>
+                سطح دسترسی
+            </h1>
+            
+            <div class="subscription-grid">
+                <article class="subscription-card" data-tier="plenum">
+                    <h2 class="subscription-card__title">پلنیوم</h2>
+                    <div class="subscription-card__body">
+                        <p class="subscription-duration">۶ ماه دسترسی کامل</p>
+                        <p class="subscription-price">
+                            <span class="price-amount">۱۴۹</span>
+                            هزار تومان
+                        </p>
+                    </div>
+                    <button class="btn btn--subscribe" data-action="subscribe" data-plan="149000">
+                        انتخاب پلن
+                    </button>
+                </article>
+
+                <article class="subscription-card" data-tier="imperial">
+                    <h2 class="subscription-card__title">امپریال</h2>
+                    <div class="subscription-card__body">
+                        <p class="subscription-duration">۱۲ ماه دسترسی ویژه</p>
+                        <p class="subscription-price">
+                            <span class="price-amount">۲۴۹</span>
+                            هزار تومان
+                        </p>
+                    </div>
+                    <button class="btn btn--subscribe" data-action="subscribe" data-plan="249000">
+                        انتخاب پلن
+                    </button>
+                </article>
+            </div>
+        </section>
+
+        <!-- Map View -->
+        <section class="view view--map" data-view="map" hidden aria-labelledby="mapHeading">
+            <h1 id="mapHeading" class="view__title">
+                <span aria-hidden="true">🌍</span>
+                جستجوی پلاک
+            </h1>
+            
+            <form id="searchForm" class="search-form">
+                <div class="form-group grid-layout">
+                    <div class="form-field">
+                        <label for="mainPlate" class="form-label">پلاک اصلی</label>
+                        <input 
+                            type="number" 
+                            id="mainPlate"
+                            class="form-control"
+                            min="0"
+                            step="1"
+                            inputmode="numeric"
+                            placeholder="مثال: ۱۲۳"
+                            aria-describedby="plateHelp"
+                        >
+                    </div>
+                    
+                    <div class="form-field">
+                        <label for="subPlate" class="form-label">پلاک فرعی</label>
+                        <input 
+                            type="number" 
+                            id="subPlate"
+                            class="form-control"
+                            min="0"
+                            step="1"
+                            inputmode="numeric"
+                            placeholder="مثال: ۴۵"
+                            aria-describedby="plateHelp"
+                        >
+                    </div>
+                </div>
+                <div id="plateHelp" class="sr-only">مقادیر عددی وارد نمایید</div>
+            </form>
+
+            <div id="mapContainer" class="map-container">
+                <noscript>
+                    <p class="map-fallback">
+                        ❌ برای استفاده از نقشه نیاز به فعال‌سازی جاوااسکریپت دارید
+                    </p>
+                </noscript>
+            </div>
+        </section>
+    </main>
+
+    <!-- Core Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" 
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" 
+        crossorigin="anonymous"
+        async
+    ></script>
+    
+    <script src="./scripts/app.js" type="module" defer></script>
+</body>
+</html>
