@@ -1,0 +1,93 @@
+:root {
+    --color-primary: #2c3e50;
+    --color-secondary: #3498db;
+    --color-danger: #e74c3c;
+    --shadow-default: 0 2px 15px rgba(0,0,0,0.1);
+}
+
+body {
+    background: #f8f9fa;
+    padding: 1rem;
+    font-family: Tahoma, sans-serif;
+}
+
+.page {
+    max-width: 800px;
+    margin: 1rem auto;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s ease;
+}
+
+.page.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.form-group {
+    margin: 1.5rem 0;
+}
+
+input {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid var(--color-primary);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+button {
+    background: var(--color-primary);
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+}
+
+#map {
+    height: 500px;
+    border-radius: 15px;
+    margin-top: 2rem;
+    box-shadow: var(--shadow-default);
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255,255,255,0.95);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid var(--color-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+    #map {
+        height: 300px;
+    }
+}
